@@ -7,20 +7,23 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dateError: {},
-      mealList: {},
+      dateError: [],
+      mealList: [],
     };
-    this.renderMealPlan = this.renderMealPlan.bind(this);
+    this.handleGetMealsSchedule = this.handleGetMealsSchedule.bind(this);
   }
-  renderMealPlan(clientProps) {
-    if (clientProps.error) {
+  handleGetMealsSchedule(newHackers, notAddedHackersNames) {
+    if (notAddedHackersNames) {
       this.setState({
-        dateError: { error: "error", client: clientProps.hacker },
+        dateError: notAddedHackersNames,
       });
     } else {
-      this.setState({
-        mealList: clientProps,
-      });
+      this.setState(
+        {
+          mealList: newHackers,
+        },
+        () => console.log(this.state.mealList)
+      );
     }
   }
   render() {
@@ -30,12 +33,14 @@ class App extends Component {
           <h2>Hacker Hostel</h2>
         </center>
         <div className="container">
-          <Bookings mealPlan={this.renderMealPlan}></Bookings>
+          <Bookings
+            handleGetMealsSchedule={this.handleGetMealsSchedule}
+          ></Bookings>
           {this.state.dateError.client && (
-            <Error {...this.state.dateError}></Error>
+            <Error dateError={this.state.dateError}></Error>
           )}
           {this.state.mealList.hacker && (
-            <Meals {...this.state.mealList}></Meals>
+            <Meals hackers={this.state.mealList}></Meals>
           )}
         </div>
       </div>
